@@ -7,6 +7,7 @@
 
 namespace app\commands;
 
+use keltstr\simplehtmldom\SimpleHTMLDom as SHD;
 use yii\console\Controller;
 
 /**
@@ -25,6 +26,11 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        echo $message . "\n";
+		$html = SHD::file_get_html('http://www.azuolynas.klaipeda.lm.lt/tvark/tvark_2014-2015_2pusm/index.htm'); 
+		$tbody = $html->find('tbody',0);
+       foreach($tbody->find('td') as $td) 
+       {
+             echo $td->plaintext . '<br>';
+       }
     }
 }

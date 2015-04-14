@@ -57,4 +57,13 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
+  'keltstr/yii2-simplehtmldom' => 
+  array (
+    'name' => 'keltstr/yii2-simplehtmldom',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@keltstr/simplehtmldom' => $vendorDir . '/keltstr/yii2-simplehtmldom',
+    ),
+  ),
 );

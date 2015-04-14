@@ -259,60 +259,6 @@
         "installation-source": "dist"
     },
     {
-        "name": "bower-asset/jquery.inputmask",
-        "version": "3.1.61",
-        "version_normalized": "3.1.61.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
-            "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
-            "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
-            "shasum": ""
-        },
-        "require": {
-            "bower-asset/jquery": ">=1.7"
-        },
-        "type": "bower-asset-library",
-        "extra": {
-            "bower-asset-main": [
-                "./dist/inputmask/jquery.inputmask.js",
-                "./dist/inputmask/jquery.inputmask.extensions.js",
-                "./dist/inputmask/jquery.inputmask.date.extensions.js",
-                "./dist/inputmask/jquery.inputmask.numeric.extensions.js",
-                "./dist/inputmask/jquery.inputmask.phone.extensions.js",
-                "./dist/inputmask/jquery.inputmask.regex.extensions.js"
-            ],
-            "bower-asset-ignore": [
-                "**/.*",
-                "qunit/",
-                "nuget/",
-                "tools/",
-                "js/",
-                "*.md",
-                "build.properties",
-                "build.xml",
-                "jquery.inputmask.jquery.json"
-            ]
-        },
-        "installation-source": "dist",
-        "license": [
-            "http://opensource.org/licenses/mit-license.php"
-        ],
-        "description": "jquery.inputmask is a jquery plugin which create an input mask.",
-        "keywords": [
-            "form",
-            "input",
-            "inputmask",
-            "jquery",
-            "mask",
-            "plugins"
-        ]
-    },
-    {
         "name": "cebe/markdown",
         "version": "1.0.2",
         "version_normalized": "1.0.2.0",
@@ -926,6 +872,109 @@
         "keywords": [
             "Fixture",
             "faker",
+            "yii2"
+        ]
+    },
+    {
+        "name": "bower-asset/jquery.inputmask",
+        "version": "3.1.62",
+        "version_normalized": "3.1.62.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
+            "reference": "da1a274cefa18a52a0519ac7ffe8e8d31e950eae"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/da1a274cefa18a52a0519ac7ffe8e8d31e950eae",
+            "reference": "da1a274cefa18a52a0519ac7ffe8e8d31e950eae",
+            "shasum": ""
+        },
+        "require": {
+            "bower-asset/jquery": ">=1.7"
+        },
+        "type": "bower-asset-library",
+        "extra": {
+            "bower-asset-main": [
+                "./dist/inputmask/jquery.inputmask.js",
+                "./dist/inputmask/jquery.inputmask.extensions.js",
+                "./dist/inputmask/jquery.inputmask.date.extensions.js",
+                "./dist/inputmask/jquery.inputmask.numeric.extensions.js",
+                "./dist/inputmask/jquery.inputmask.phone.extensions.js",
+                "./dist/inputmask/jquery.inputmask.regex.extensions.js"
+            ],
+            "bower-asset-ignore": [
+                "**/.*",
+                "qunit/",
+                "nuget/",
+                "tools/",
+                "js/",
+                "*.md",
+                "build.properties",
+                "build.xml",
+                "jquery.inputmask.jquery.json"
+            ]
+        },
+        "installation-source": "dist",
+        "license": [
+            "http://opensource.org/licenses/mit-license.php"
+        ],
+        "description": "jquery.inputmask is a jquery plugin which create an input mask.",
+        "keywords": [
+            "form",
+            "input",
+            "inputmask",
+            "jquery",
+            "mask",
+            "plugins"
+        ]
+    },
+    {
+        "name": "keltstr/yii2-simplehtmldom",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/keltstr/yii2-simplehtmldom.git",
+            "reference": "eaecdcce9fbbca8c655522b6516af9f7c1cb5164"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/keltstr/yii2-simplehtmldom/zipball/eaecdcce9fbbca8c655522b6516af9f7c1cb5164",
+            "reference": "eaecdcce9fbbca8c655522b6516af9f7c1cb5164",
+            "shasum": ""
+        },
+        "require": {
+            "yiisoft/yii2": "*"
+        },
+        "time": "2014-12-23 05:37:04",
+        "type": "yii2-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.210.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "keltstr\\simplehtmldom\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "WTFPL"
+        ],
+        "authors": [
+            {
+                "name": "keltstr",
+                "email": "keltstr@gmail.com"
+            }
+        ],
+        "description": "\"PHP Simple HTML DOM Parser\" rev.210 adapted to Yii2 psr-4(namespace autoload class) based on serhatozles/yii2-simplehtmldom(rev.196)",
+        "keywords": [
+            "extension",
+            "simple_html_dom",
+            "simplehtmldom",
             "yii2"
         ]
     }
