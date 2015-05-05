@@ -1,6 +1,10 @@
 <?php
 /* @var $this yii\web\View */
-$this->title = 'My Yii Application';
+
+use yii\bootstrap\ActiveForm;
+use kartik\select2\Select2;
+
+$this->title = 'Pamokų keistuvas';
 ?>
 <div class="site-index">
 
@@ -9,43 +13,51 @@ $this->title = 'My Yii Application';
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
     </div>
 
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
+	<?php
+	$form = ActiveForm::begin();
+	echo $form->field($model, 'day')->dropDownList(['Pirmadienis', 'Antradienis', 'Trečiadienis', 'Ketvirtadienis', 'Penktadienis', 'Šeštadienis', 'Sekmadienis']);
+	echo $form->field($model, 'student_id')->widget(Select2::classname(), [
+		'data' => $students,
+		'language' => 'lt',
+		'options' => ['placeholder' => 'Pasirinkite moksleivį'],
+		'pluginOptions' => [
+			'allowClear' => true
+		],
+	]);
+	echo $form->field($model, 'lessons')->widget(Select2::classname(), [
+		'data' => [],
+		'language' => 'lt',
+		'options' => ['placeholder' => 'Pirmiausia pasirinkite moksleivį'],
+		'pluginOptions' => [
+			'allowClear' => true
+		],
+	]);
+	ActiveForm::end();
+	?>
 </div>
+<?php
+$url = Yii::$app->urlManager->createUrl(['site/lessons']);
+
+$this->registerJs(<<<EOF
+var select = $("#changeform-student_id");
+var lessons = $("#changeform-lessons");
+var day = $("#changeform-day");
+
+select.change(function(){
+	//Load all lessons for him
+	$.ajax({
+		url: "$url",
+		data: {student_id: $(this).val(), day:day.val()},
+		success: function(data){
+			lessons.select2('destroy');
+			lessons.html(data);
+			lessons.select2();
+		}
+	});
+	console.log($(this).val());
+});
+EOF
+);
+?>

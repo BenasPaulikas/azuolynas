@@ -11,6 +11,10 @@ use keltstr\simplehtmldom\SimpleHTMLDom as SHD;
 use yii\console\Controller;
 use app\models\Teacher;
 use app\models\Student;
+use app\models\Lesson;
+
+//You shit our pages contains lots of code..
+ini_set('xdebug.max_nesting_level', false);
 
 class HelloController extends Controller
 {
@@ -19,6 +23,7 @@ class HelloController extends Controller
     {
 		Teacher::deleteAll();
 		Student::deleteAll();
+		Lesson::deleteAll();
 		$html = SHD::file_get_html('http://www.azuolynas.klaipeda.lm.lt/tvark/tvark_2014-2015_2pusm/index.htm');
 		
 		$table = $html->find('table',1);
@@ -47,19 +52,28 @@ class HelloController extends Controller
 			} else if($action=='Kabinetai'){
 				
 			} else if($action=='Moksleiviai'){
+				
 				$student = new Student;
 				$student->id = $href;
 				$student->name = $name;
 				$student->save(false);
-				/*
-				Crawl lessons also
+				
+				echo $name.":\n";
+				
+				//Crawl lessons also
 				$url = 'http://www.azuolynas.klaipeda.lm.lt/tvark/tvark_2014-2015_2pusm/'.$a->href;
-				$lessons = SHD::file_get_html($url);
-				$body = $lessons->find('tbody',0);
-				var_dump($body->plaintext);
-				*/
-
-				var_dump($student->name);
+				
+				//$url code is so shitty we need to use regex
+				preg_match_all("/<a href=\"([0-9].+).htm\">(.+)<\/a>/", file_get_contents($url), $output);
+				
+				foreach($output[1] as $id=>$link){
+					$lesson = new Lesson;
+					$lesson->student_id = $student->id;
+					$lesson->short = $link;
+					echo $link;
+					$lesson->name = $output[2][$id];
+					$lesson->save(false);
+				}
 			}
 
 		}

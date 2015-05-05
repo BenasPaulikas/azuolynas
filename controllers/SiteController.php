@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Student;
+use app\models\Lesson;
 
 class SiteController extends Controller
 {
@@ -49,8 +51,22 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+		$model = new \app\models\ChangeForm;
+		
+		$model->day = date('N') - 1;
+		
+        return $this->render('index', [
+			'model' => $model,
+			'students' => \yii\helpers\ArrayHelper::map(Student::find()->all(), 'id', 'name')
+		]);
     }
+	
+	public function actionLessons($student_id)
+	{
+		foreach(Lesson::find()->where(['student_id' => $student_id])->all() as $lesson){
+			echo \yii\helpers\Html::tag('option', $lesson->name, ['value' => $lesson->short]);
+		}
+	}
 
     public function actionLogin()
     {
