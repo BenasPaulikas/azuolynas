@@ -61,11 +61,43 @@ class SiteController extends Controller
 		]);
     }
 	
-	public function actionLessons($student_id)
+	public function actionLessons($student_id,$day)
 	{
-		foreach(Lesson::find()->where(['student_id' => $student_id])->all() as $lesson){
-			echo \yii\helpers\Html::tag('option', $lesson->name, ['value' => $lesson->short]);
+		foreach(Lesson::find()->where(['student_id' => $student_id, 'day' => $day+1])->orderBy('number ASC')->all() as $lesson){
+			$name = $lesson->number.' // '.$lesson->name;
+			echo \yii\helpers\Html::tag('option', $name, ['value' => $lesson->short]);
 		}
+	}
+	
+	public function actionProcess($student_id, $day){
+		$day = $day + 1;
+		$ignore = $_GET['lessons'];
+		
+		$lessons = Lesson::find()->where(['student_id' => $student_id, 'day' => $day])->all();
+		var_dump(count($lessons));
+		foreach($lessons as $id=>$lesson){
+			if(in_array($lesson['short'],$ignore) || !$lesson->name) unset($lessons[$id]);
+		}
+		
+		$tmp = $lessons;
+		foreach($lessons as $i=>$lesson){
+			
+			echo "Hey {$lesson->teacher->name} can you accept me ?\n";
+			$lesson = Lesson::find()->where(['day' => $day, 'teacher_id' => $lesson->teacher_id])->one();
+			if($lesson){
+				echo "Yes\n";
+			} else {
+				die('fail');
+			}
+			return;
+			//1 lesson is $lesson, does our teaches support it ?
+		}
+		/*
+			Load all lessons,
+				drop all that does exist
+					DO TREE
+		*/
+		//var_dump($lessons);
 	}
 
     public function actionLogin()

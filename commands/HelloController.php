@@ -21,7 +21,7 @@ class HelloController extends Controller
 
     public function actionIndex($message = 'hello world')
     {
-		Teacher::deleteAll();
+		//Teacher::deleteAll();
 		Student::deleteAll();
 		Lesson::deleteAll();
 		$html = SHD::file_get_html('http://www.azuolynas.klaipeda.lm.lt/tvark/tvark_2014-2015_2pusm/index.htm');
@@ -44,6 +44,7 @@ class HelloController extends Controller
 			$href = str_replace('.htm','',$a->href);
 			
 			if($action=='Mokytojai'){
+				continue;
 				$teacher = new Teacher;
 				$teacher->id = $href;
 				$teacher->name = $name;
@@ -52,6 +53,8 @@ class HelloController extends Controller
 			} else if($action=='Kabinetai'){
 				
 			} else if($action=='Moksleiviai'){
+				$changes = [];
+				
 				
 				$student = new Student;
 				$student->id = $href;
@@ -60,20 +63,83 @@ class HelloController extends Controller
 				
 				echo $name.":\n";
 				
-				//Crawl lessons also
 				$url = 'http://www.azuolynas.klaipeda.lm.lt/tvark/tvark_2014-2015_2pusm/'.$a->href;
+				$input_lines = file_get_contents($url);
 				
-				//$url code is so shitty we need to use regex
-				preg_match_all("/<a href=\"([0-9].+).htm\">(.+)<\/a>/", file_get_contents($url), $output);
+				preg_match_all("/<td valign=middle  bgcolor=\"(#ffffff|#ffffcc)\"( rowspan=2|)><font size=1>(<b><a href=\"(.+)\">(.+)<\/a>.+|)/", $input_lines, $output_array);
 				
-				foreach($output[1] as $id=>$link){
-					$lesson = new Lesson;
-					$lesson->student_id = $student->id;
-					$lesson->short = $link;
-					echo $link;
-					$lesson->name = $output[2][$id];
-					$lesson->save(false);
+				$number = 1;
+				$day = 0;
+				
+				$lessons = [
+					1 => [],
+					2 => [],
+					3 => [],
+					4 => [],
+					5 => [],
+				];
+
+				$minus = false;
+				
+				$number = 1;
+				
+				foreach($output_array[4] as $id=>$link){
+					
+					$day++;
+					
+					$short = $link;
+					$name = iconv("", "UTF-8//TRANSLIT//IGNORE", $output_array[5][$id]);
+					
+					//@TODO get our teacher ?
+					if($short){
+						$input_lines = file_get_contents('http://www.azuolynas.klaipeda.lm.lt/tvark/tvark_2014-2015_2pusm/'.$short);
+						preg_match_all("/&#151; (.+)<br>/", $input_lines, $teachers);
+						$t = iconv("", "UTF-8//TRANSLIT//IGNORE", $teachers[1][0]);
+						$teacher = Teacher::find()->where(['name' => $t])->one();
+					}
+				
+					$lessons[$day][$number] = [
+						'short' => $short,
+						'number' => $number,
+						'name' => $name,
+						'teacher_id' => @$teacher->id
+					];
+
+					if($output_array[2][$id]==' rowspan=2'){
+						$lessons[$day][$number+1] = [
+							'short' => $short,
+							'name' => $name,
+							'teacher_id' => @$teacher->id
+						];
+						$minus = true;
+					}
+					if($day==5){
+						$day = 0;
+						if($minus){
+							$day = 1;
+							$minus = false;
+						}
+						$number++;
+					}
+
 				}
+				
+				for($i=1;$i<=5;$i++){
+					
+					foreach($lessons[$i] as $number=>$l){
+						$lesson = new Lesson;
+						$lesson->student_id = $student->id;
+						$lesson->teacher_id = $l['teacher_id'];
+						$lesson->short = $l['short'];
+						$lesson->name = $l['name'];
+						$lesson->number = $number;
+						$lesson->day = $i;
+						$lesson->save(false);
+						//var_dump($lessons[$i]);
+					}
+
+				}
+
 			}
 
 		}
