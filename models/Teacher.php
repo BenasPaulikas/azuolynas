@@ -40,4 +40,5 @@ class Teacher extends \yii\db\ActiveRecord
             'name' => 'Name',
         ];
     }
+	
 }

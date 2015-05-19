@@ -69,35 +69,42 @@ class SiteController extends Controller
 		}
 	}
 	
+	public function accept($lessons, $number, $day){
+		$found = false;
+		foreach($lessons as $lesson){
+			$found = Lesson::find()->where(['day' => $day, 'teacher_id' => $lesson->teacher_id, 'number' => $number])->one();
+			if($found) return $found;
+		}
+		return $found;
+	}
+	
 	public function actionProcess($student_id, $day){
+		echo "\n";
 		$day = $day + 1;
 		$ignore = $_GET['lessons'];
 		
 		$lessons = Lesson::find()->where(['student_id' => $student_id, 'day' => $day])->all();
-		var_dump(count($lessons));
+
 		foreach($lessons as $id=>$lesson){
 			if(in_array($lesson['short'],$ignore) || !$lesson->name) unset($lessons[$id]);
 		}
 		
 		$tmp = $lessons;
-		foreach($lessons as $i=>$lesson){
+
 			
-			echo "Hey {$lesson->teacher->name} can you accept me ?\n";
-			$lesson = Lesson::find()->where(['day' => $day, 'teacher_id' => $lesson->teacher_id])->one();
-			if($lesson){
-				echo "Yes\n";
+		$go = [];
+		for($number=1;$number<count($lessons)+2;$number++){
+			echo "Hey can some1 accept me on {$number} ?\n";
+			$found = $this->accept($lessons, $number, $day);
+			if($found){
+				$go[$number] = $found;
+				echo "{$found->teacher->name}: Yes I will accept you\n";
+				unset($lessons[$number]);	
 			} else {
-				die('fail');
+				echo "No \n";
 			}
-			return;
-			//1 lesson is $lesson, does our teaches support it ?
 		}
-		/*
-			Load all lessons,
-				drop all that does exist
-					DO TREE
-		*/
-		//var_dump($lessons);
+		echo "That's it\n";
 	}
 
     public function actionLogin()
