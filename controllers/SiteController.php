@@ -78,6 +78,13 @@ class SiteController extends Controller
 		return $found;
 	}
 	
+	public function accept2($lesson, $number, $day){
+		$found = false;
+			$found = Lesson::find()->where(['day' => $day, 'teacher_id' => $lesson->teacher_id, 'number' => $number])->one();
+			if($found) return $found;
+		return $found;
+	}
+	
 	public function actionProcess($student_id, $day){
 		echo "\n";
 		$day = $day + 1;
@@ -90,8 +97,24 @@ class SiteController extends Controller
 		}
 		
 		$tmp = $lessons;
+		
+		foreach($lessons as $id=>$lesson){
+			//paimti pirma pamoka, tikrinti ar tinkama, jeigu taip tada imti antra pamoka, tikrinti antra pamoka
+			$go = [];
+			$number = 1;
+				echo "Hey can some1 accept me on {$number} ?\n";
+				$found = $this->accept2($lesson, $number, $day);
+				if($found){
+					$go[$number] = $found;
+					echo "{$found->teacher->name}: Yes I will accept you\n";	
+				} else {
+					echo "No \n";
+				}
+				
+			$number++;
+		}
 
-			
+		/*	
 		$go = [];
 		for($number=1;$number<count($lessons)+2;$number++){
 			echo "Hey can some1 accept me on {$number} ?\n";
@@ -103,8 +126,9 @@ class SiteController extends Controller
 			} else {
 				echo "No \n";
 			}
-		}
+		}*/
 		echo "That's it\n";
+		var_dump($go);
 	}
 
     public function actionLogin()
